@@ -25,25 +25,25 @@ public class inputPanel extends JPanel implements ActionListener {
 	// -----------------------------------------------------------------------
 
 	public static JFrame f = new JFrame();
+
 	public static int boardRows, boardCols;
-	int startRow, startCol;
-	int delay;
-	WarnsdorfsRule w;
+	static int startRow, startCol;
+	static int delay;
+
+	static WarnsdorfsRule w;
 	public static Timer timer;
-	// static Board b;
-	MainTour mt;
+	static Board b;
 
 	Font plainFont = new Font("Serif", Font.BOLD, 12);
 
-	public inputPanel(MainTour m) // Constructor Board(rows, cols)
+	public inputPanel() // Constructor Board(rows, cols)
 	{
-		mt = m;
 		// Initializes all necessary graphics
 
 		System.out.println("Panel: initializing graphics");
 
 		// gridSize
-		gridSizeLabel = new JLabel("Grid Size( 1-30 ) ");
+		gridSizeLabel = new JLabel("Grid Size");
 		gridSizeTextField = new JTextField();
 
 		// goButton
@@ -53,11 +53,11 @@ public class inputPanel extends JPanel implements ActionListener {
 		goButton.addActionListener(this);
 
 		// startLocation
-		startLocationLabel = new JLabel("Start Location( R  C ) ");
+		startLocationLabel = new JLabel("Start Location");
 		startLocationTextField = new JTextField();
 
 		// delay
-		delayLabel = new JLabel("Delay( in milliseconds ) ");
+		delayLabel = new JLabel("Delay");
 		delayTextField = new JTextField();
 
 		// create a new panel
@@ -103,32 +103,32 @@ public class inputPanel extends JPanel implements ActionListener {
 			String gridSize = gridSizeTextField.getText();
 			String result1[] = gridSize.split(" ");
 			boardRows = Integer.parseInt(result1[0]);
-			// limit board size to 30
-			if (boardRows > 30) {
+			//limit board size to 30
+			if(boardRows > 30){
 				boardRows = 30;
 				gridSizeTextField.setText("30");
 			}
 			boardCols = boardRows; // only square boards are allowed
-
+			
 			// read from startLocationTextField
 			String startLocation = startLocationTextField.getText();
 			String result2[] = startLocation.split(" ");
 			startRow = Integer.parseInt(result2[0]);
 			startCol = Integer.parseInt(result2[1]);
-			// limit the start row and col to fit on the board
-			if (startRow < 1) {
+			//limit the start row and col to fit on the board
+			if(startRow < 1){
 				startRow = 1;
 			}
-			if (startCol < 1) {
+			if(startCol < 1){
 				startCol = 1;
 			}
-			if (startRow > boardRows) {
+			if(startRow > boardRows){
 				startRow = boardRows;
 			}
-			if (startCol > boardRows) {
+			if(startCol > boardRows){
 				startCol = boardRows;
 			}
-			startLocationTextField.setText("" + startRow + " " + startCol);
+			startLocationTextField.setText(""+ startRow + " " + startCol);
 			// read from delaytextFields
 			String result3 = delayTextField.getText();
 			delay = Integer.parseInt(result3);
@@ -139,11 +139,12 @@ public class inputPanel extends JPanel implements ActionListener {
 			System.out.println(startCol);
 			System.out.println(delay);
 			// Starts tour
-			mt.startTour(this);
+			TourProject.startTour();
 
 		} else {
 			// System.out.println("Timer Event."+ e.getSource());
-			mt.MakeOneMove(this);// if it wasn't the go button then it's the timer
+			TourProject.MakeOneMove();// if it wasn't the go button then it's
+										// the timer
 		}
 	}
 
@@ -171,8 +172,8 @@ public class inputPanel extends JPanel implements ActionListener {
 		// System.out.println( "in paintComponent " + totalMoves);
 		Font plainFont = new Font("Serif", Font.BOLD, 10);
 		g.setFont(plainFont);
-		// previousMove is the current number of knight moves
-		// totalMoves is the count of the next move
+		//previousMove is the current number of knight moves
+		//totalMoves is the count of the next move
 		int testMove;
 		int previousMove = Board.totalMoves - 1;
 
@@ -182,41 +183,62 @@ public class inputPanel extends JPanel implements ActionListener {
 				// g.clearRect(0, 0, 1000, 1000);
 				if (Board.theDisplayBoard[x][y].equals("**"))
 					g.setColor(Color.green);
-				else if (Board.theDisplayBoard[x][y].equals("1"))// spot where it starts
+				else if (Board.theDisplayBoard[x][y].equals("1"))// spot where it starts														
 					g.setColor(Color.blue);
 				else
 					g.setColor(Color.red);
-				// convert int to string and compares.If the board equals where
-				// the knight was last, draw knight
-				if ((Board.theDisplayBoard[x][y].equals("" + previousMove))) {
+				//convert int to string and compares.If the board equals where the knight was last, draw knight
+				if ((Board.theDisplayBoard[x][y].equals("" + previousMove)))
+				{
 					// System.out.println("Drawing knight" + Board.totalMoves +"
 					// " + previousMove);
 					g.drawImage(Board.knightImage[0], ((x - 2) * 30) - 10, ((y - 1) * 30) - 15, null);
 				} else
-					// g.drawString("+", (x - 2) * 30, (y - 1) * 30);
 					g.drawString(Board.theDisplayBoard[x][y], (x - 2) * 30, (y - 1) * 30);
 				// -2 because the counter starts
 				// at 3 to ignore the -1's but we are actually displaying the
 				// first row or col
-				if (!Board.theDisplayBoard[x][y].equals("**")) {
-					testMove = Integer.parseInt(Board.theDisplayBoard[x][y]);
+				if (!Board.theDisplayBoard[x][y].equals("**"))
+				{
+					testMove= Integer.parseInt(Board.theDisplayBoard[x][y]);
 					testMove++;
-					// if (testLoc == Board.totalMoves)
-					for (int x1 = 3; x1 <= boardRows + 2; x1++)
-						for (int y1 = 3; y1 <= boardCols + 2; y1++) {
-							if (Board.theDisplayBoard[x1][y1].equals("" + testMove)) {
-								g.setColor(Color.black);
-								//draws a line from each number to show the path of the knight
-								g.drawLine((x - 2) * 30, (y - 1) * 30, (x1 - 2) * 30, (y1 - 1) * 30);
+					//if (testLoc == Board.totalMoves) 
+						for (int x1 = 3; x1 <= boardRows + 2; x1++)
+							for (int y1 = 3; y1 <= boardCols + 2; y1++) 
+							{
+								if (Board.theDisplayBoard[x1][y1].equals(""+ testMove))
+								{
+									g.drawLine  ((x - 2) * 30,
+									(y - 1) * 30 ,
+									(x1 - 2) * 30,
+									(y1 - 1) * 30);
+
+								}
 							}
-						}
-				}
+					}
+
 			}
 		}
 		f.toFront();
 	}
+
 	// redraw method
 	public static void redrawPanel() {
 		f.repaint();
 	}
+
+	// test routine for printing board to console
+	public void boardPrint(String s) {
+		System.out.println(s);
+		for (int x = 3; x <= boardRows + 2; x++) {
+			System.out.println(" ");
+			for (int y = 3; y <= boardCols + 2; y++) {
+				System.out.print(Board.theBoard[x][y]);
+			}
+
+		}
+		System.out.println(" ");
+		System.out.println("----------------------------");
+	}
+
 }

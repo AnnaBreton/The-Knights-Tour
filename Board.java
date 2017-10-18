@@ -23,11 +23,12 @@ import javax.imageio.ImageIO;
 //- Locations with 0 are valid moves
 //- if a location has a number > 0, then the knight has visited it.
 
+
 public class Board {
-	public int theBoard[][] = new int[100][100];
+	public static int theBoard[][] = new int[100][100];
 	public static String theDisplayBoard[][] = new String[100][100];
 	public static int totalMoves = 0;
-	public int boardRows, boardCols;
+	public static int boardRows, boardCols;
 	public static Image knightImage[];
 
 	// constructor
@@ -90,14 +91,19 @@ public class Board {
 
 	// takes the board and converts the int values to string values so they can
 	// be displayed
-	public void displayStuff() {
+	public static void displayStuff() {
 		System.out.println("in Display stuff " + totalMoves);
 		for (int y = 3; y <= boardRows + 2; y++) {
 			for (int x = 3; x <= boardCols + 2; x++) {
 				if (theBoard[x][y] == 0) {
 					theDisplayBoard[x][y] = "**";
 				} else {
-					theDisplayBoard[x][y] = "" + theBoard[x][y];// change ints to strings so you can display in graphics window
+					theDisplayBoard[x][y] = "" + theBoard[x][y];// change ints
+																// to strings so
+																// you can
+																// display it in
+																// the graphics
+																// window
 				}
 			}
 		}
